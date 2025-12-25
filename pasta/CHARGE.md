@@ -323,4 +323,49 @@ func move(dt):
 		c.last_pos = lp									# Last position -> current position
 ```
 
+Ao executar e criar algumas cargas você ja deve ser capaz de observar as cargas se movendo, e o campo elétrico mudando. Mas parece que ainda falta algo. Sim, o magnetismo.
+
+## Magnetic Field
+
+### Creating the field
+
+Para representar o campo magnetico vamos criar uma imagem em que cada pixel muda de cor de acordo com o campo. Dessa forma é necessário adicionar um objeto do tipo Sprite2D a cena principal.
+
+#### Ajustando proporção da imagem
+
+Como queremos que o a imagem tenha nx x ny pixels, e o tamanho real seja lx x ly, precisamos normalizar a area da imagem pela quantidade de pixels, e aumentar o tamanho de acordo com o tamanho desejado. Além disso, devemos alterar a posição da figura de modo a centralizar em nossa tela.
+
+```gdscript
+func _ready():
+	gen_e_field(nx,ny)
+	update_vectors()
+	$Sprite2D.scale = Vector2(lx/float(nx),ly/float(ny))
+	$Sprite2D.global_position = Vector2(lx/2.0,ly/2.0)
+```
+
+#### Atualizando o campo magnetico
+
+Um campo escalar é uma função que leva cada ponto do espaço em um número real. Já uma imagem, é uma grade em que cada ponto possui uma cor, isso é, um conjunto de 3 ou 4 números, que é processado pelo computador para mudar a cor da tela. O que queremos fazer é criar uma imagem, percorrer cada pixel dessa imagem, calcular a posição real referente a esse pixel, e para cada carga calcular sua velocidade e um vetor que sai do pixel e chega na carga, assim calculando o campo magnetico gerado pela carga nesse pixel, e por fim pintando o pixel da forma desejada.
+
+```gdscript
+func update_m_field():
+	var img = Image.create(nx, ny, false, Image.FORMAT_RGBA8)
+	for i in range(nx):
+		for j in range(ny):
+			var B = 0
+			var pos = Vector2(i / float(nx) * lx,j / float(ny) * ly) + 0.5*Vector2(1,1)
+			for c in charges:
+				var v = (c.global_position - c.last_pos) / get_physics_process_delta_time()
+				var r = (pos - c.global_position)
+				B += 0.25 * c.q * v.length() * sin(r.angle_to(v)) / r.length()
+			
+			if B > 0:
+				img.set_pixel(i, j, Color(1, 1 - B,1 - B))
+			else:
+				img.set_pixel(i, j, Color(1 + B, 1,1 + B))
+	var tex = ImageTexture.create_from_image(img)
+	$Sprite2D.texture = tex
+```
+
+
 
