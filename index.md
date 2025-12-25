@@ -61,7 +61,7 @@ The simulations were implemented using **Python** and the **Godot Engine**, aimi
 
 <div style="display: flex; align-items: center; gap: 50px;">
 
-  <img src="./pics/charge.png" width="300">
+  <img src="./pics/charges.png" width="300">
 
   <div style="font-size: 1.2em;">
     <strong><a href="./pasta/CHARGE.html">2D Electromagnetism</a></strong><br>
