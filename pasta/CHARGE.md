@@ -208,8 +208,8 @@ class charge:
 We define a class that:
 
 - Inherits from `Sprite`
-- Contains variables for `charge` and `velocity`
-- Receives initial values for `charge` and `position` upon creation
+- Contains variables for `charge` called "q", and `last position` which will help us later.
+- Receives initial values for `charge`, `last position` and `position` upon creation
 - Sets its texture dynamically based on the charge value
 
 This allows us to represent the charge both visually and physically within the simulation.
@@ -219,6 +219,12 @@ This allows us to represent the charge both visually and physically within the s
 #### Mouse Interaction
 
 We have already created an object with all the necessary components to represent a charge. However, if we run the simulation, nothing happens — this is because we have not yet added the charge to the scene. Let’s do that now.
+
+First of all, create a variable to store our charges.
+
+```gdscript
+var charges = []
+```
 
 ```gdscript
 func _input(event):
