@@ -298,9 +298,11 @@ $$
 
 While Euler’s method has an error proportional to \\( \Delta t^2 \\), Verlet’s method has an error proportional to \\( \Delta t^4 \\), which leads to much faster convergence as \\( \Delta t \\) decreases. However, we now require knowledge of the previous position \\( x(t - \Delta t) \\), which must be stored at each step, and the acceleration \\( a(t) \\), which can be computed from the electric field.
 
-### Movimento
+## Motion of the Charges
 
-Para aplicar o método de Verlet ao nosso sistema, precisamos computar o campo elétrico na posição de cada carga, multiplicar pela carga para obter a força, e dividir pela massa para obter a aceleração. Então repetimos isso para cada carga a cada frame, utilizando o parâmetro delta como time-step, e modificamos a posição da carga com base no método.
+To apply the **Verlet integration method** to our system, we first compute the electric field at the position of each charge. Multiplying this field by the charge yields the force, which, when divided by the particle mass, produces the acceleration.
+
+This procedure is repeated for every charge at each frame. The parameter `delta` is used as the time step, and the particle positions are updated according to the Verlet scheme.
 
 ```gdscript
 func _physics_process(delta):
@@ -308,44 +310,54 @@ func _physics_process(delta):
 	move(delta)
 
 func get_accel(cp):
-	var k = 10000.0			# Proportional parameter
-	var f = Vector2(0,0)		# Total field
-	for c in charges:		# Sum over all charge fields except one charge
+	var k = 10000.0                  # Coupling constant
+	var f = Vector2(0,0)             # Total force
+	for c in charges:                # Sum over all other charges
 		if c != cp:
-			f += k*c.q/((cp.global_position - c.global_position).length() + 0.0001)**2*(cp.global_position - c.global_position)
-	var a = f*cp.q/cp.m		# Acceleration
+			f += k * c.q / ((cp.global_position - c.global_position).length() + 0.0001)**2 \
+			     * (cp.global_position - c.global_position)
+	var a = f * cp.q / cp.m          # Acceleration
 	return a
 
 func move(dt):
 	for c in charges:
-		var lp = c.global_position							# Current position
-		c.global_position = 2*c.global_position - c.last_pos + get_accel(c)*dt**2	# Current position -> New position
-		c.last_pos = lp									# Last position -> current position
+		var lp = c.global_position
+		c.global_position = 2 * c.global_position - c.last_pos + get_accel(c) * dt**2
+		c.last_pos = lp
 ```
 
-Ao executar e criar algumas cargas você ja deve ser capaz de observar as cargas se movendo, e o campo elétrico mudando. Mas parece que ainda falta algo. Sim, o magnetismo.
+After running the simulation and creating a few charges, one can already observe their motion and the continuous rearrangement of the electric field. However, the physical description is still incomplete.  
+The missing ingredient is **magnetism**.
+
+---
 
 ## Magnetic Field
 
-### Creating the field
+### Field Construction
 
-Para representar o campo magnetico vamos criar uma imagem em que cada pixel muda de cor de acordo com o campo. Dessa forma é necessário adicionar um objeto do tipo Sprite2D a cena principal.
+To represent the magnetic field, we construct an image in which each pixel encodes the local field intensity through its color. This is achieved by adding a `Sprite2D` object to the main scene, which will display the dynamically updated field texture.
 
-#### Ajustando proporção da imagem
+---
 
-Como queremos que o a imagem tenha nx x ny pixels, e o tamanho real seja lx x ly, precisamos normalizar a area da imagem pela quantidade de pixels, e aumentar o tamanho de acordo com o tamanho desejado. Além disso, devemos alterar a posição da figura de modo a centralizar em nossa tela.
+### Image Scaling and Spatial Mapping
+
+Since the image consists of `nx × ny` pixels while representing a physical region of size `lx × ly`, the sprite must be properly scaled. The pixel grid is normalized and resized to match the physical dimensions of the simulation domain. Finally, the sprite is translated so that it is centered on the screen.
 
 ```gdscript
 func _ready():
-	gen_e_field(nx,ny)
+	gen_e_field(nx, ny)
 	update_vectors()
-	$Sprite2D.scale = Vector2(lx/float(nx),ly/float(ny))
-	$Sprite2D.global_position = Vector2(lx/2.0,ly/2.0)
+	$Sprite2D.scale = Vector2(lx / float(nx), ly / float(ny))
+	$Sprite2D.global_position = Vector2(lx / 2.0, ly / 2.0)
 ```
 
-#### Atualizando o campo magnetico
+---
 
-Um campo escalar é uma função que leva cada ponto do espaço em um número real. Já uma imagem, é uma grade em que cada ponto possui uma cor, isso é, um conjunto de 3 ou 4 números, que é processado pelo computador para mudar a cor da tela. O que queremos fazer é criar uma imagem, percorrer cada pixel dessa imagem, calcular a posição real referente a esse pixel, e para cada carga calcular sua velocidade e um vetor que sai do pixel e chega na carga, assim calculando o campo magnetico gerado pela carga nesse pixel, e por fim pintando o pixel da forma desejada.
+### Updating the Magnetic Field
+
+A **scalar field** assigns a real number to every point in space, whereas an image is a discrete grid in which each point stores color information. Our goal is to connect these two representations.
+
+For each pixel, we compute its corresponding physical position and evaluate the magnetic field at that point. The contribution from each charge is calculated using its velocity and the vector connecting the charge to the pixel. The resulting field value is then mapped to a color and written to the image.
 
 ```gdscript
 func update_m_field():
@@ -353,16 +365,17 @@ func update_m_field():
 	for i in range(nx):
 		for j in range(ny):
 			var B = 0
-			var pos = Vector2(i / float(nx) * lx,j / float(ny) * ly) + 0.5*Vector2(1,1)
+			var pos = Vector2(i / float(nx) * lx, j / float(ny) * ly) + 0.5 * Vector2(1,1)
 			for c in charges:
 				var v = (c.global_position - c.last_pos) / get_physics_process_delta_time()
-				var r = (pos - c.global_position)
+				var r = pos - c.global_position
 				B += 0.25 * c.q * v.length() * sin(r.angle_to(v)) / r.length()
 			
 			if B > 0:
-				img.set_pixel(i, j, Color(1, 1 - B,1 - B))
+				img.set_pixel(i, j, Color(1, 1 - B, 1 - B))
 			else:
-				img.set_pixel(i, j, Color(1 + B, 1,1 + B))
+				img.set_pixel(i, j, Color(1 + B, 1, 1 + B))
+
 	var tex = ImageTexture.create_from_image(img)
 	$Sprite2D.texture = tex
 ```
