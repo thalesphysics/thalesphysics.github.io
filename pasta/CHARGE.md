@@ -505,5 +505,31 @@ What we have been doing so far to resolve numerical problems is to take limits, 
 We can rewrite the Dirac delta function as follows:
 
 $$
-\delta(\vec{r}) = \lim_{l_o \to \infty} \frac{1}{2\pi l_o} e^{-(x^2 + y^2)/l_o}
+\delta(\vec{r}) = \lim_{l_o \to 0} \frac{1}{2\pi l_o} e^{-(r_x^2 + r_y^2)/l_o}
 $$
+
+Observe que quando nos aproximamos da nossa carga a exponencial se aproxima da unidade, e a equação se aproxima de infinito
+
+$$
+\delta(\vec{r}\to 0) = \lim_{l_o \to 0} \frac{1}{2\pi l_o} = \inf
+$$
+
+Quando nos afastamos da carga, e entao rx^2 ou ry^2 é maior que l_o, a funcao se anula rapidamente
+
+$$
+\delta(\vec{r}) = \lim_{l_o \to 0} \frac{1}{2\pi l_o} e^{-\inf} = 0
+$$
+
+Assim, escolhendo um valor pequeno, mas não nulo de l_o, podemos realizar nossos calculos utulizando uma gaussiana. Isso nos dá uma equação razoável para a densidade de corrente e para o rotacional dela.
+
+$$
+\vec{J(\vec{r})} = \rho(\vec{r}) \vec{v} = q \frac{1}{2\pi l_o} e^{-(r_x^2 + r_y^2)/l_o} \vec{v}
+$$
+
+$$
+\Nabla \cdot \vec{J(\vec{r)} = - q \frac{( - x v_y + y v_x)}{\pi} e^{-(r_x^2 + r_y^2)/l_o}
+$$
+
+### Coding
+
+#### Library
