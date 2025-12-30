@@ -454,10 +454,10 @@ $$
 \nabla^2 \mathbf{B} - \frac{1}{c^2} \frac{\partial^2 \mathbf{B}}{\partial t^2} = \mu_0 \nabla_{\perp} \cdot \vec{j}
 $$
 
-<div style="display: flex; align-items: center; gap: 50px;">
-
-  <img src="../pics/onda_leve.gif" width="600">
-
+<div style="display: flex; align-items: flex-start; gap: 40px;">
+  <div>
+    <img src="../pics/onda_leve.gif" style="width: 1000px; max-width: 200%; border-radius: 8px;" alt="Magnetic waves">
+  </div>
 </div>
 
 ### Finite Difference Equation
