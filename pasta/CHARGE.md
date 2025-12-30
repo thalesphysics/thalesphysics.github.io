@@ -758,3 +758,9 @@ ani.save(                                                                       
 )
 
 ```
+
+<div style="display: flex; align-items: center; gap: 50px;">
+
+  <img src="./pics/onda_leve.gif" width="600">
+
+</div>
