@@ -451,4 +451,30 @@ $$
 \nabla^2 \mathbf{B} - \frac{1}{c^2} \frac{\partial^2 \mathbf{B}}{\partial t^2} = \mu_0 \nabla_{\perp} \cdot \vec{j}
 $$
 
+### Finite Difference Equation
+
+A sufficiently well-behaved function can be expanded in the vicinity of a point using its Taylor series. Let us apply this expansion to both a forward and a backward step.
+
+$$
+f(x + \Delta x) = f(x) + f'(x) \Delta x + \frac{f''(x) {\Delta x}^2}{2} + \frac{f^{(3)}(x) {\Delta x}^3}{6} + \mathcal{O}(\Delta x)^4
+$$
+
+$$
+f(x - \Delta x) = f(x) - f'(x) \Delta x + \frac{f''(x) {\Delta x}^2}{2} - \frac{f^{(3)}(x) {\Delta x}^3}{6} + \mathcal{O}(\Delta x)^4
+$$
+
+By summing these two equations, we obtain:
+
+$$
+f(x + \Delta x) + f(x - \Delta x) = 2 f(x) + f''(x) {\Delta x}^2 + \mathcal{O}(\Delta x)^4
+$$
+
+Consequently, we can express the second derivative as:
+
+$$
+\frac{f(x + \Delta x) - 2 f(x) + f(x - \Delta x)}{{\Delta x}^2} = f''(x) + \mathcal{O}(\Delta x)^2
+$$
+
+This provides a formula for the second derivative of the function, with an error proportional to the square of the step size.
+
 
