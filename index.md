@@ -93,7 +93,7 @@ For feedback, suggestions, or collaboration inquiries, feel free to reach out vi
 
 <div style="display: flex; align-items: center; gap: 50px;">
 
-  <img src="5087243562612624401.jpg" width="300">
+  <img src="./pics/5087243562612624401.jpg" width="300">
 
 </div>
 
