@@ -466,7 +466,7 @@ $$
 By summing these two equations, we obtain:
 
 $$
-f(x + \Delta x) + f(x - \Delta x) = 2 f(x) + f''(x) {\Delta x}^2 + \mathcal{O}(\Delta x)^4
+f(x + \Delta x) + f(x - \Delta x) = 2 f(x) + f''(x) {\Delta x}^2 + \mathcal{O}(\Delta x^2)
 $$
 
 Consequently, we can express the second derivative as:
