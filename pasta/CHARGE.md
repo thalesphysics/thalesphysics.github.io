@@ -513,30 +513,76 @@ $$
 \delta(\vec{r}) = \lim_{l_o \to 0} \frac{1}{2\pi l_o} e^{-(r_x^2 + r_y^2)/l_o}
 $$
 
-Observe que quando nos aproximamos da nossa carga a exponencial se aproxima da unidade, e a equação se aproxima de infinito
+Observe that when we approach the charge, the exponential term tends to unity, and the expression diverges:
 
 $$
-\delta(\vec{r}\to 0) = \lim_{l_o \to 0} \frac{1}{2\pi l_o} = \inf
+\delta(\vec{r}\to 0) = \lim_{l_o \to 0} \frac{1}{2\pi l_o} = \infty
 $$
 
-Quando nos afastamos da carga, e entao rx^2 ou ry^2 é maior que l_o, a funcao se anula rapidamente
+Conversely, when we move away from the charge, so that \(r_x^2\) or \(r_y^2\) becomes larger than \(l_o\), the function rapidly vanishes:
 
 $$
-\delta(\vec{r}) = \lim_{l_o \to 0} \frac{1}{2\pi l_o} e^{-\inf} = 0
+\delta(\vec{r}) = \lim_{l_o \to 0} \frac{1}{2\pi l_o} e^{-\infty} = 0
 $$
 
-Assim, escolhendo um valor pequeno, mas não nulo de l_o, podemos realizar nossos calculos utulizando uma gaussiana. Isso nos dá uma equação razoável para a densidade de corrente e para o rotacional dela.
+Thus, by choosing a small but non-zero value of \(l_o\), we can perform our calculations using a Gaussian approximation. This provides a reasonable model for the current density and its curl:
 
 $$
-\vec{J(\vec{r})} = \rho(\vec{r}) \vec{v} = q \frac{1}{2\pi l_o} e^{-(r_x^2 + r_y^2)/l_o} \vec{v}
+\vec{J}(\vec{r}) = \rho(\vec{r}) \vec{v} = q \frac{1}{2\pi l_o} e^{-(r_x^2 + r_y^2)/l_o} \vec{v}
 $$
 
 $$
-\Nabla \cdot \vec{J(\vec{r)} = - q \frac{( - x v_y + y v_x)}{\pi} e^{-(r_x^2 + r_y^2)/l_o}
+\nabla \cdot \vec{J}(\vec{r}) = - q \frac{(-x v_y + y v_x)}{\pi} e^{-(r_x^2 + r_y^2)/l_o}
 $$
-
-{% endraw %}
 
 ### Coding
 
 #### Library
+
+We will only use `numpy` and `matplotlib` for our simulation.
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+```
+
+#### Variables
+
+Analogously to our previous work in Godot, we create a grid for the magnetic field and lists for the properties of the charges.
+
+```python
+lx, ly = 20.0, 20.0          # Simulation box size
+nx, ny = 70, 70              # Number of points in each direction
+dx = lx / nx
+dy = ly / ny
+
+c = 10.0                     # Speed of light
+dt = 5e-4
+steps = 300                  # Number of simulation steps
+interval_ms = 30             # Duration of each frame
+
+B = np.zeros((ny, nx))       # Magnetic field matrice
+B_old = np.zeros_like(B)     # Last magnetic field matrice
+
+xs = np.array([              # Position of each charge
+    [3.0, 5.0],
+    [7.0, 5.0],
+    [15,12]
+])
+vs = np.array([              # Speed of each charge
+    [0.0,  2.0],
+    [0.0, -2.0],
+    [0,0]
+])
+qs = np.array([1.0, -1.0,1]) # Charge of each charge
+
+k_coul = 100.0               # Proportionality constant
+eps = 1e-2                   # Singularity break parameter
+lo = 0.1
+inv_lo = 1.0 / lo
+```
+
+```python
+
+```
