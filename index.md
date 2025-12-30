@@ -86,35 +86,36 @@ Each simulation is accompanied by a brief theoretical description and the corres
 
 # About the Author
 
-<div style="display: flex; align-items: center; gap: 30px;">
+<div style="display: flex; align-items: flex-start; gap: 40px;">
 
   <!-- Image on the left -->
   <div>
-    <img src="./pics/5087243562612624401.jpg" width="350" alt="Author photo">
+    <img src="./pics/5087243562612624401.jpg" style="width: 400px; max-width: 100%; border-radius: 8px;" alt="Author photo">
   </div>
 
   <!-- Text on the right -->
-  <div>
+  <div style="max-width: 600px; line-height: 1.6;">
 
-  My name is **Thales**, and I am an undergraduate student of Physics at the **Federal University of ABC (UFABC)**, located in the ABC metropolitan region of Brazil.
+    <p>My name is <strong>Thales</strong>, and I am an undergraduate student of Physics at the <strong>Federal University of ABC (UFABC)</strong>, located in the ABC metropolitan region of Brazil.</p>
 
-  I have worked with simulations related to:
+    <p>I have worked with simulations related to:</p>
+    <ul>
+      <li>the <strong>maximum hydrogen adsorption capacity of materials</strong>;</li>
+      <li>the <strong>prediction of mechanical properties</strong>;</li>
+      <li>the <strong>prediction of electrical properties</strong>;</li>
+      <li>the <strong>prediction of catalytic capacities for hydrogen production</strong>.</li>
+    </ul>
 
-  - the **maximum hydrogen adsorption capacity of materials**;
-  - the **prediction of mechanical properties**;
-  - the **prediction of electrical properties**;
-  - the **prediction of catalytic capacities for hydrogen production**.
+    <p>In general, I employed computational methods based on <strong>classical atomistic dynamics</strong> and <strong>quantum mechanics</strong>.</p>
 
-  In general, I employed computational methods based on **classical atomistic dynamics** and **quantum mechanics**.
+    <p>Furthermore, I have participated in <strong>physics competitions</strong> focused on solving simple, open-ended physics problems, both <strong>theoretically</strong> and <strong>experimentally</strong>.</p>
 
-  Furthermore, I have participated in **physics competitions** focused on solving simple, open-ended physics problems, both **theoretically** and **experimentally**.
-
-  For feedback, suggestions, or collaboration inquiries, feel free to reach out via  
-  [GitHub](https://github.com/thalesphysics) or email at **thales.machado.fernandes@gmail.com**.
+    <p>For feedback, suggestions, or collaboration inquiries, feel free to reach out via <a href="https://github.com/thalesphysics">GitHub</a> or email at <strong>thales.machado.fernandes@gmail.com</strong>.</p>
 
   </div>
 
 </div>
+
 
 ---
 
