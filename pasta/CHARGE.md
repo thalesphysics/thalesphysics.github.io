@@ -355,7 +355,7 @@ $$
 \vec{J}(\vec{r}) = \frac{d\vec{I}}{dl} = \frac{d}{dl} \left( \frac{dq}{dt} \hat{u} \right)
 $$
 
-Using the **chain rule**, and assuming that the flow of charge along the current is constant and equal to \(q\):
+Using the **chain rule**, and assuming that the flow of charge along the current is constant and equal to \\(q\\):
 
 $$
 \frac{d}{dl} \left( \frac{dq}{dt} \ \hat{u} \right) 
@@ -387,8 +387,8 @@ $$
 
 where:  
 
-- \(\eta = |\vec{r} - \vec{r'}|\) is the distance between the point of observation and the point charge,  
-- \(\theta\) is the angle between the velocity \(\vec{v}\) of the charge and \(\eta\).  
+- \\(\eta = |\vec{r} - \vec{r'}|\\) is the distance between the point of observation and the point charge,  
+- \\(\theta\\) is the angle between the velocity \\(\vec{v}\\) of the charge and \\(\eta\\).  
 
 ### Field Construction
 
