@@ -631,6 +631,47 @@ lo = 0.1
 inv_lo = 1.0 / lo
 ```
 
-```python
+#### Solving
 
+```python
+def step():
+    global B, B_old, xs, vs                                                              # Get the global variables
+
+    for i in range(len(xs)):                                                             # Loop over each charge
+        f = np.zeros(2)                                                                  # Define a null vector for the force
+        for j in range(len(xs)):                                                         # Loope over other charges
+            if i != j:
+                r = xs[i] - xs[j]                                                        # Distance vector
+                r2 = np.dot(r, r) + eps                                                  # Quadratic distance plus a positive number
+                f += k_coul * qs[i] * qs[j] * r / r2                                     # Coulomb force
+        vs[i] += f * dt
+        xs[i] += vs[i] * dt
+
+    lap = (
+        (np.roll(B, 1, axis=0) - 2*B + np.roll(B, -1, axis=0)) / dy**2 +
+        (np.roll(B, 1, axis=1) - 2*B + np.roll(B, -1, axis=1)) / dx**2
+    )
+
+    S = np.zeros_like(B)
+    for p in range(len(xs)):
+        rx = X - xs[p, 0]
+        ry = Y - xs[p, 1]
+        r2 = rx**2 + ry**2
+        vx, vy = vs[p]
+        S += qs[p] * (-ry*vx + rx*vy) * np.exp(-r2 * inv_tau) * inv_tau
+
+    B_new = 2*B - B_old + (c*dt)**2 * (lap - 0.2*S)
+
+    cx = c * dt / dx
+    cy = c * dt / dy
+
+    # esquerda e direita
+    B_new[:, 0]  = B[:, 0]  - cx * (B[:, 0]  - B[:, 1])
+    B_new[:, -1] = B[:, -1] - cx * (B[:, -1] - B[:, -2])
+
+    B_new[0, :]  = B[0, :]  - cy * (B[0, :]  - B[1, :])
+    B_new[-1, :] = B[-1, :] - cy * (B[-1, :] - B[-2, :])
+
+    B_old[:] = B
+    B[:] = B_new
 ```
