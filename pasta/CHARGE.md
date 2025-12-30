@@ -387,7 +387,7 @@ $$
 
 where:  
 
-- \\(\eta = |\vec{r} - \vec{r'}|\\) is the distance between the point of observation and the point charge,  
+- \\( \eta = |\vec{r} - \vec{r'}| \\) is the distance between the point of observation and the point charge,  
 - \\(\theta\\) is the angle between the velocity \\(\vec{v}\\) of the charge and \\(\eta\\).  
 
 ### Field Construction
