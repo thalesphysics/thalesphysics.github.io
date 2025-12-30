@@ -685,4 +685,76 @@ def step():
 
     B_old[:] = B
     B[:] = B_new
+
+
+dt_frame = interval_ms / 1000.0                                                  # Time per frame
+steps_per_frame = max(1, int(dt_frame / dt))                                     # Steps per frame
+
+B_hist = np.zeros((steps, ny, nx))                                               # Save all fields along the time
+xs_hist = np.zeros((steps, len(xs), 2))                                          # Save all positions along the time
+
+for n in range(steps):                                                           # Loop over all frames
+    for _ in range(steps_per_frame):                                             # Loop over all steps in each frame
+        step()                                                                   # Solve one step
+    B_hist[n] = B                                                                # Save the field
+    xs_hist[n] = xs                                                              # Save the position
+
+```
+
+#### Create animation
+
+```python
+from matplotlib.colors import LinearSegmentedColormap                            # Import library
+
+fig, ax = plt.subplots(figsize=(6,6))                                            # Create figure
+
+
+cmap_rwg = LinearSegmentedColormap.from_list(                                    # Create colormap
+    "RedWhiteGreen",
+    ["lime", "white", "red"]
+)
+
+im = ax.imshow(                                                                  # Create first frame field picture
+    B_hist[0],
+    extent=[0, lx, 0, ly],
+    origin="lower",
+    cmap=cmap_rwg,
+    vmin=-0.1,
+    vmax=0.1
+)
+
+scat = ax.scatter(                                                               # Create colorful points
+    xs_hist[0,:,0],
+    xs_hist[0,:,1],
+    c=["red", "blue","red"],
+    s=80
+)
+
+ax.set_xticks([])                                                                # Take off ticks
+ax.set_yticks([])
+
+cbar = fig.colorbar(im, ax=ax,shrink=0.75)                                       # Set colorbar
+cbar.set_label("Scalar Magnetic Field", fontsize=16)                             # Set label
+
+cbar.set_ticks([])                                                               # Take off ticks
+
+def update(frame):                                                               # Update animation function
+    im.set_data(B_hist[frame])
+    scat.set_offsets(xs_hist[frame])
+    return im, scat
+
+ani = FuncAnimation(                                                            # Create animation
+    fig,
+    update,
+    frames=steps,
+    interval=interval_ms
+)
+
+ani.save(                                                                       # Save animation
+    "wave.gif",
+    writer="ffmpeg",
+    fps=500 // interval_ms,
+    dpi=150
+)
+
 ```
