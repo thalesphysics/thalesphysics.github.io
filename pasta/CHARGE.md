@@ -342,7 +342,7 @@ At this stage, we adopt an **approximation**, treating the charges as **stationa
 As a starting point, we can write the **2D Biot–Savart equation**:
 
 $$
-B(\vec{r}) = \frac{\mu_0}{2\pi} \int \frac{\hat{z} \cdot \big( \vec{J}(\vec{r'}) \times (\vec{r} - \vec{r'}) \big)}{|\vec{r} - \vec{r'}|^2} \, d^2 r'
+B(\vec{r}) = \frac{\mu_0}{2\pi} \int \frac{\hat{z} \cdot \big( \vec{J}(\vec{r'}) \times (\vec{r} - \vec{r'}) \big)}{|\vec{r} - \vec{r'}|^2}  ~d^2 r'
 $$
 
 ---
@@ -352,21 +352,21 @@ $$
 The current density of a point charge can be expressed as:
 
 $$
-\vec{J}(\vec{r}) = \frac{d\vec{I}}{dl} = \frac{d}{dl} \left( \frac{dq}{dt} \, \hat{u} \right)
+\vec{J}(\vec{r}) = \frac{d\vec{I}}{dl} = \frac{d}{dl} \left( \frac{dq}{dt} \hat{u} \right)
 $$
 
 Using the **chain rule**, and assuming that the flow of charge along the current is constant and equal to \(q\):
 
 $$
-\frac{d}{dl} \left( \frac{dq}{dt} \, \hat{u} \right) 
+\frac{d}{dl} \left( \frac{dq}{dt} \ \hat{u} \right) 
 = \frac{d}{dl} \left( \frac{dq}{ds} \frac{ds}{dt} \hat{u} \right) 
-= \frac{d}{dl} (q \, \vec{v})
+= \frac{d}{dl} (q \vec{v})
 $$
 
 Hence, the current density becomes:
 
 $$
-\vec{J}(\vec{r}) = q \, \delta(\vec{r}) \, \vec{v}
+\vec{J}(\vec{r}) = q \delta(\vec{r}) \vec{v}
 $$
 
 ---
@@ -376,13 +376,13 @@ $$
 Substituting this expression into the Biot–Savart equation:
 
 $$
-B(\vec{r}) = \frac{\mu_0}{2\pi} \int \frac{\hat{z} \cdot \Big( (q \, \delta(\vec{r'}) \, \vec{v}) \times (\vec{r} - \vec{r'}) \Big)}{|\vec{r} - \vec{r'}|^2} \, d^2 r'
+B(\vec{r}) = \frac{\mu_0}{2\pi} \int \frac{\hat{z} \cdot \Big( (q  \delta(\vec{r'})  \vec{v}) \times (\vec{r} - \vec{r'}) \Big)}{|\vec{r} - \vec{r'}|^2}  ~^2 r'
 $$
 
 This reduces to:
 
 $$
-B(\vec{r}) = \frac{\mu_0}{2\pi} \frac{q \, v \, \sin\theta}{|\eta|}
+B(\vec{r}) = \frac{\mu_0}{2\pi} \frac{q v \sin\theta}{|\eta|}
 $$
 
 where:  
