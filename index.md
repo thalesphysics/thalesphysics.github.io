@@ -98,15 +98,15 @@ Each simulation is accompanied by a brief theoretical description and the corres
 
     <p>My name is <strong>Thales</strong>, and I am an undergraduate student of Physics at the <strong>Federal University of ABC (UFABC)</strong>, located in the ABC metropolitan region of Brazil.</p>
 
-    <p>I have worked with simulations related to:</p>
+    <p>I have worked with simulations related to prediction of:</p>
     <ul>
-      <li>the <strong>maximum hydrogen adsorption capacity of materials</strong>;</li>
-      <li>the <strong>prediction of mechanical properties</strong>;</li>
-      <li>the <strong>prediction of electrical properties</strong>;</li>
-      <li>the <strong>prediction of catalytic capacities for hydrogen production</strong>.</li>
+      <li> <strong>Maximum hydrogen adsorption capacity of materials</strong>;</li>
+      <li> <strong>Mechanical properties</strong>;</li>
+      <li> <strong>Electrical properties</strong>;</li>
+      <li> <strong>Catalytic capacities for hydrogen production</strong>.</li>
     </ul>
 
-    <p>In general, I employed computational methods based on <strong>classical atomistic dynamics</strong> and <strong>quantum mechanics</strong>.</p>
+    <p>In general, I employed computational methods based on <strong>classical atomistic dynamics</strong> and <strong>quantum mechanics</strong>, and sometimes <strong>machine learning</strong>.</p>
 
     <p>Furthermore, I have participated in <strong>physics competitions</strong> focused on solving simple, open-ended physics problems, both <strong>theoretically</strong> and <strong>experimentally</strong>.</p>
 
