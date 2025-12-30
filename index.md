@@ -84,14 +84,20 @@ Each simulation is accompanied by a brief theoretical description and the corres
 
 ---
 
-# About the author
+# About the Author
 
-My name is **Thales**, and I am a Physics undergraduate student at UFABC of Brazil.
+My name is **Thales**, and I am an undergraduate student of Physics at the **Federal University of ABC (UFABC)**, located in the ABC metropolitan region of Brazil.
 
-For feedback, suggestions, or collaboration inquiries, feel free to reach out via [GitHub](https://github.com/Jumelord) or email.
+My academic experience includes research involving computational simulations focused on the **maximum hydrogen adsorption capacity of materials**, as well as the **prediction of mechanical, electrical, and catalytic properties**, particularly in the context of hydrogen production. These studies have primarily employed computational methodologies grounded in **classical atomistic dynamics** and **quantum mechanical approaches**.
+
+In addition to my research activities, I have participated in **physics competitions** centered on the resolution of open-ended problems, encompassing both **theoretical analysis** and **experimental investigation**.
+
+For feedback, suggestions, or potential collaboration opportunities, please feel free to contact me via  
+[GitHub](https://github.com/thalesphysics) or by email at **thales.machado.fernandes@gmail.com**.
+
 
 <div style="display: flex; justify-content: center;">
-  <img src="./pics/5087243562612624401.jpg" width="300">
+  <img src="./pics/5087243562612624401.jpg" width="500">
 </div>
 
 ---
