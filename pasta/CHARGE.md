@@ -333,6 +333,16 @@ The missing ingredient is **magnetism**.
 
 ## Magnetic Field
 
+### Magnetic Field of Pontual Charges
+
+O campo magnetico de cargas pontuais em um movimento arbitrário não é algo trivial. É conhecido que variações no fluxomagnético podem criar ondas no campo eletrico e magnetico. No contexto computacional, isso se resume a resolver equaçoes diferenciais para o espaço inteiro a todo espaço de tempo (Iremos fazer isso mais tarde de maneira não interativa). Nossa abordagem nesse momento vai ser uma aproximação, tratando as cargas como correntes estacionárias.
+
+Como um ponto de partida, vamos escrever a equação de Biot Savart em 2D:
+
+$$
+B(\vec{r}) = \frac{\mu_o}{2\pi}\int \frac{\hat{z}\cedot (\vec{J{\vec{r}}}\times (\vec{r} - \vec{r'}))}{|\vec{r} - \vec{r'}|^2}dr'^2
+$$
+
 ### Field Construction
 
 To represent the magnetic field, we construct an image in which each pixel encodes the local field intensity through its color. This is achieved by adding a `Sprite2D` object to the main scene, which will display the dynamically updated field texture.
