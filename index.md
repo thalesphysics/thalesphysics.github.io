@@ -86,26 +86,34 @@ Each simulation is accompanied by a brief theoretical description and the corres
 
 # About the Author
 
-My name is **Thales**, and I am an undergraduate student of Physics at the **Federal University of ABC (UFABC)**, located in the ABC metropolitan region of Brazil.
+<div style="display: flex; align-items: center; gap: 30px;">
 
-I have worked with simulations related to:
+  <!-- Image on the left -->
+  <div>
+    <img src="./pics/5087243562612624401.jpg" width="350" alt="Author photo">
+  </div>
 
-- the **maximum hydrogen adsorption capacity of materials**;
-- the **prediction of mechanical properties**;
-- the **prediction of electrical properties**;
-- the **prediction of catalytic capacities for hydrogen production**.
+  <!-- Text on the right -->
+  <div>
 
-In general, I employed computational methods based on **classical atomistic dynamics** and **quantum mechanics**.
+  My name is **Thales**, and I am an undergraduate student of Physics at the **Federal University of ABC (UFABC)**, located in the ABC metropolitan region of Brazil.
 
-Furthermore, I have participated in **physics competitions** focused on solving simple, open-ended physics problems, both **theoretically** and **experimentally**.
+  I have worked with simulations related to:
 
-For feedback, suggestions, or collaboration inquiries, feel free to reach out via  
-[GitHub](https://github.com/thalesphysics) or email at **thales.machado.fernandes@gmail.com**.
+  - the **maximum hydrogen adsorption capacity of materials**;
+  - the **prediction of mechanical properties**;
+  - the **prediction of electrical properties**;
+  - the **prediction of catalytic capacities for hydrogen production**.
 
+  In general, I employed computational methods based on **classical atomistic dynamics** and **quantum mechanics**.
 
+  Furthermore, I have participated in **physics competitions** focused on solving simple, open-ended physics problems, both **theoretically** and **experimentally**.
 
-<div style="display: flex; justify-content: center;">
-  <img src="./pics/5087243562612624401.jpg" width="500">
+  For feedback, suggestions, or collaboration inquiries, feel free to reach out via  
+  [GitHub](https://github.com/thalesphysics) or email at **thales.machado.fernandes@gmail.com**.
+
+  </div>
+
 </div>
 
 ---
