@@ -532,7 +532,7 @@ $$
 $$
 
 $$
-\nabla \cdot \vec{J}(\vec{r}) = - q \frac{(-x v_y + y v_x)}{\pi} e^{-(r_x^2 + r_y^2)/l_o}
+\nabla \cdot \vec{J}(\vec{r}) = - q \frac{(-x v_y + y v_x)}{\pi l_o} e^{-(r_x^2 + r_y^2)/l_o}
 $$
 {% endraw %}
 ### Boundary Condition
