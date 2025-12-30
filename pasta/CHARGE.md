@@ -454,6 +454,12 @@ $$
 \nabla^2 \mathbf{B} - \frac{1}{c^2} \frac{\partial^2 \mathbf{B}}{\partial t^2} = \mu_0 \nabla_{\perp} \cdot \vec{j}
 $$
 
+<div style="display: flex; align-items: center; gap: 50px;">
+
+  <img src="../pics/onda_leve.gif" width="600">
+
+</div>
+
 ### Finite Difference Equation
 
 A sufficiently well-behaved function can be expanded in the vicinity of a point using its Taylor series. Let us apply this expansion to both a forward and a backward step.
@@ -759,8 +765,3 @@ ani.save(                                                                       
 
 ```
 
-<div style="display: flex; align-items: center; gap: 50px;">
-
-  <img src="./pics/onda_leve.gif" width="600">
-
-</div>
