@@ -519,7 +519,7 @@ $$
 \delta(\vec{r}\to 0) = \lim_{l_o \to 0} \frac{1}{2\pi l_o} = \infty
 $$
 
-Conversely, when we move away from the charge, so that \(r_x^2\) or \(r_y^2\) becomes larger than \(l_o\), the function rapidly vanishes:
+Conversely, when we move away from the charge, so that \\(r_x^2\\) or \\(r_y^2\\) becomes larger than \\(l_o\\), the function rapidly vanishes:
 
 $$
 \delta(\vec{r}) = \lim_{l_o \to 0} \frac{1}{2\pi l_o} e^{-\infty} = 0
