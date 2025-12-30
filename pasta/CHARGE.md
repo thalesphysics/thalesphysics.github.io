@@ -387,9 +387,12 @@ $$
 
 where:  
 
+{% raw %}
+
 - \\( \eta = |\vec{r} - \vec{r'}| \\) is the distance between the point of observation and the point charge,  
 - \\(\theta\\) is the angle between the velocity \\(\vec{v}\\) of the charge and \\(\eta\\).  
 
+{% endraw %}
 ### Field Construction
 
 To represent the magnetic field, we construct an image in which each pixel encodes the local field intensity through its color. This is achieved by adding a `Sprite2D` object to the main scene, which will display the dynamically updated field texture.
@@ -482,6 +485,8 @@ This provides a formula for the second derivative of the function, with an error
 
 In this manner, we will apply finite differences to our magnetic wave equation.
 
+{% raw %}
+
 $$
 \frac{B(x, y, t + \Delta t) - 2B(x, y, t) + B(x, y, t - \Delta t)}{\Delta t^2} = c^2 \left( \nabla^2 B(x, y, t) - \mu_0 \nabla_{\perp} \cdot \vec{j} \right)
 $$
@@ -529,6 +534,8 @@ $$
 $$
 \Nabla \cdot \vec{J(\vec{r)} = - q \frac{( - x v_y + y v_x)}{\pi} e^{-(r_x^2 + r_y^2)/l_o}
 $$
+
+{% endraw %}
 
 ### Coding
 
