@@ -88,12 +88,20 @@ Each simulation is accompanied by a brief theoretical description and the corres
 
 My name is **Thales**, and I am an undergraduate student of Physics at the **Federal University of ABC (UFABC)**, located in the ABC metropolitan region of Brazil.
 
-My academic experience includes research involving computational simulations focused on the **maximum hydrogen adsorption capacity of materials**, as well as the **prediction of mechanical, electrical, and catalytic properties**, particularly in the context of hydrogen production. These studies have primarily employed computational methodologies grounded in **classical atomistic dynamics** and **quantum mechanical approaches**.
+I have worked with simulations related to:
 
-In addition to my research activities, I have participated in **physics competitions** centered on the resolution of open-ended problems, encompassing both **theoretical analysis** and **experimental investigation**.
+- the **maximum hydrogen adsorption capacity of materials**;
+- the **prediction of mechanical properties**;
+- the **prediction of electrical properties**;
+- the **prediction of catalytic capacities for hydrogen production**.
 
-For feedback, suggestions, or potential collaboration opportunities, please feel free to contact me via  
-[GitHub](https://github.com/thalesphysics) or by email at **thales.machado.fernandes@gmail.com**.
+In general, I employed computational methods based on **classical atomistic dynamics** and **quantum mechanics**.
+
+Furthermore, I have participated in **physics competitions** focused on solving simple, open-ended physics problems, both **theoretically** and **experimentally**.
+
+For feedback, suggestions, or collaboration inquiries, feel free to reach out via  
+[GitHub](https://github.com/thalesphysics) or email at **thales.machado.fernandes@gmail.com**.
+
 
 
 <div style="display: flex; justify-content: center;">
