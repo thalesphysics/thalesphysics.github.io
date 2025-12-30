@@ -90,17 +90,8 @@ My name is **Thales**, and I am a Physics undergraduate student at UFABC of Braz
 
 For feedback, suggestions, or collaboration inquiries, feel free to reach out via [GitHub](https://github.com/Jumelord) or email.
 
-
-<div style="display: flex; align-items: center; gap: 50px;">
-
+<div style="display: flex; justify-content: center;">
   <img src="./pics/5087243562612624401.jpg" width="300">
-
-  <div style="font-size: 1.2em;">/thales.github.io//thales.github.io//thales.github.io//thales.github.io/
-    My name is **Thales**, and I am a Physics undergraduate student at UFABC of Brazil.
-    
-    For feedback, suggestions, or collaboration inquiries, feel free to reach out via [GitHub](https://github.com/Jumelord) or email.
-  </div>
-  
 </div>
 
 ---
