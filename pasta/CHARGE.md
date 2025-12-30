@@ -455,6 +455,7 @@ $$
 
 A sufficiently well-behaved function can be expanded in the vicinity of a point using its Taylor series. Let us apply this expansion to both a forward and a backward step.
 
+{% raw %}
 $$
 f(x + \Delta x) = f(x) + f'(x) \Delta x + \frac{f''(x) {\Delta x}^2}{2} + \frac{f^{(3)}(x) {\Delta x}^3}{6} + \mathcal{O}(\Delta x)^4
 $$
@@ -474,7 +475,7 @@ Consequently, we can express the second derivative as:
 $$
 \frac{f(x + \Delta x) - 2 f(x) + f(x - \Delta x)}{{\Delta x}^2} = f''(x) + \mathcal{O}(\Delta x)^2
 $$
-
+{% endraw %}
 This provides a formula for the second derivative of the function, with an error proportional to the square of the step size.
 
 
