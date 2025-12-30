@@ -90,6 +90,13 @@ My name is **Thales**, and I am a Physics undergraduate student at UFABC of Braz
 
 For feedback, suggestions, or collaboration inquiries, feel free to reach out via [GitHub](https://github.com/Jumelord) or email.
 
+
+<div style="display: flex; align-items: center; gap: 50px;">
+
+  <img src="5087243562612624401.jpg" width="300">
+
+</div>
+
 ---
 
 <center>
