@@ -437,5 +437,18 @@ func update_m_field():
 	$Sprite2D.texture = tex
 ```
 
+## Magnetic Waves
+
+Suppose you have gone completely mad, and creating a set of charges moving according to the laws of 2D electromagnetism, with interactive electrostatic and magnetostatic fields, is no longer sufficient to quench your thirst for physics. In that case, I have some unfortunate news: the Godot engine is not optimized enough to solve systems far more complex than this (I have tried extensively). Indeed, up until now, we have only solved systems where the temporal evolution depends solely on the positions and velocities of the charges, and on the positions of each field point.  
+
+Taking this to the next level would yield a system in which every point of the field depends on the positions and velocities of all charges, the value of the field at the previous timestep, and the values of the surrounding field points. This quickly becomes intractable to compute at every step and is generally too time-consuming to achieve reasonable precision in Godot.  
+
+Our next step will be implemented in Python, which is far more efficient at handling computationally demanding problems. We will also employ several libraries to create animations of our system.  
+
+The equation we aim to solve is the two-dimensional wave equation with a source term:
+
+$$
+\nabla^2 \mathbf{B} - \frac{1}{c^2} \frac{\partial^2 \mathbf{B}}{\partial t^2} = \mu_0 \nabla_{\perp} \cdot \vec{j}
+$$
 
 
