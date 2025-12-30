@@ -457,25 +457,53 @@ A sufficiently well-behaved function can be expanded in the vicinity of a point 
 
 {% raw %}
 $$
-f(x + \Delta x) = f(x) + f'(x) \Delta x + \frac{f''(x) {\Delta x}^2}{2} + \frac{f^{(3)}(x) {\Delta x}^3}{6} + \mathcal{O}(\Delta x)^4
+f(x + \Delta x) = f(x) + f'(x) \Delta x + \frac{f''(x) {\Delta x}^2}{2} + \frac{f^{(3)}(x) {\Delta x}^3}{6} + \mathcal{O}(\Delta x^2)
 $$
 
 $$
-f(x - \Delta x) = f(x) - f'(x) \Delta x + \frac{f''(x) {\Delta x}^2}{2} - \frac{f^{(3)}(x) {\Delta x}^3}{6} + \mathcal{O}(\Delta x)^4
+f(x - \Delta x) = f(x) - f'(x) \Delta x + \frac{f''(x) {\Delta x}^2}{2} - \frac{f^{(3)}(x) {\Delta x}^3}{6} + \mathcal{O}(\Delta x^4)
 $$
 
 By summing these two equations, we obtain:
 
 $$
-f(x + \Delta x) + f(x - \Delta x) = 2 f(x) + f''(x) {\Delta x}^2 + \mathcal{O}(\Delta x^2)
+f(x + \Delta x) + f(x - \Delta x) = 2 f(x) + f''(x) {\Delta x}^2 + \mathcal{O}(\Delta x^4)
 $$
 
 Consequently, we can express the second derivative as:
 
 $$
-\frac{f(x + \Delta x) - 2 f(x) + f(x - \Delta x)}{{\Delta x}^2} = f''(x) + \mathcal{O}(\Delta x)^2
+\frac{f(x + \Delta x) - 2 f(x) + f(x - \Delta x)}{{\Delta x}^2} = f''(x) + \mathcal{O}(\Delta x^2)
 $$
 {% endraw %}
 This provides a formula for the second derivative of the function, with an error proportional to the square of the step size.
 
+### Applying Finite Differences to the Magnetic Wave Equation
 
+In this manner, we will apply finite differences to our magnetic wave equation.
+
+$$
+\frac{B(x, y, t + \Delta t) - 2B(x, y, t) + B(x, y, t - \Delta t)}{\Delta t^2} = c^2 \left( \nabla^2 B(x, y, t) - \mu_0 \nabla_{\perp} \cdot \vec{j} \right)
+$$
+
+$$
+B(x, y, t + \Delta t) = 2B(x, y, t) - B(x, y, t - \Delta t) + {(c \Delta t)}^2 \left( \nabla^2 B(x, y, t) - \mu_0 \nabla_{\perp} \cdot \vec{j} \right)
+$$
+
+Where:
+
+$$
+\nabla^2 B(x, y, t) = \frac{B(x + \Delta x, y, t) - 2B(x, y, t) + B(x - \Delta x, y, t)}{\Delta x^2} + \frac{B(x, y + \Delta y, t) - 2B(x, y, t) + B(x, y - \Delta y, t)}{\Delta y^2}
+$$
+
+This expression provides the magnetic field value at the next time step at each point, based solely on neighboring values and previous time steps. Solving this is the primary problem we must focus on. There remains only one unknown in this equation: the divergence of the current density.
+
+Considering the current density as a Dirac delta function is a clever strategy in analytical calculations, as it faithfully describes a point charge. However, implementing a computationally infinite charge peak is rather complicated. Discontinuities are something we wish to avoid in any type of numerical computation.
+
+What we have been doing so far to resolve numerical problems is to take limits, series, spaces, and variables, and truncate them to the extent we desire. Let us proceed with this approach!
+
+We can rewrite the Dirac delta function as follows:
+
+$$
+\delta(\vec{r}) = \lim_{l_o \to \infty} \frac{1}{2\pi l_o} e^{-(x^2 + y^2)/l_o}
+$$
