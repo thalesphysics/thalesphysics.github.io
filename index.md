@@ -73,8 +73,19 @@ The simulations were implemented using **Python** and the **Godot Engine**, aimi
 
 </div>
 
+<div style="display: flex; align-items: center; gap: 50px;">
 
-## [Coupled Mass-Spring System](./simulators/coupled_springs.html)  
+  <img src="./pics/springs.png" width="300">
+
+  <div style="font-size: 1.2em;">
+    <strong><a href="./pasta/SPRING.html">Coupled Mass-Spring System</a></strong><br>
+Interacting many-body systems coupled by restoring forces are highly ubiquitous in physics. Solutions to this type of problem typically involve finding the eigenvalues and eigenvectors of matrices, an undertaking that can be analytically unfeasible. A robust alternative to this analytical intractability is numerical computation.
+
+    To solve this sophisticated type of numerical problem, we will utilize the Godot Engine in conjunction with Python (in an unusual manner).
+  </div>
+
+</div>
+
 ## [Oscillating Rings](./simulators/oscillating_rings.html)  
 ## [Dancing Flames](./simulators/dancing_flames.html)  
 ## [Projectile with Spring](./simulators/projectile_spring.html)  
