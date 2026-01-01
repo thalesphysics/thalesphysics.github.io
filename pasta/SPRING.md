@@ -28,6 +28,6 @@ a:hover {
   src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
 </script>
 
-# [Run Simulation](../spring/index.html)
+# [Run Simulation](../springs/index.html)
 
 # The Coupled Mass-Spring System
