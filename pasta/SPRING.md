@@ -143,3 +143,8 @@ x_0 \\ x_1 \\ x_2 \\ \vdots \\ x_N
 \end{bmatrix}
 $$
 
+Que de maneira resumida pode ser escrita como
+
+$$
+\frac{d^2}{dt^2}\vec{x} = - \frac{k}{m} A \vec{x}
+$$
