@@ -143,8 +143,42 @@ x_0 \\ x_1 \\ x_2 \\ \vdots \\ x_N
 \end{bmatrix}
 $$
 
-Que de maneira resumida pode ser escrita como
+Which, in summary, can be written as:
 
 $$
-\frac{d^2}{dt^2}\vec{x} = - \frac{k}{m} A \vec{x}
+\frac{d^2}{dt^2}\vec{x} = - \frac{k}{m} M \vec{x}
 $$
+
+This certainly resembles a harmonic system, albeit in matrix form. It makes sense to consider a complex exponential solution, where the physical solution would be given by the real part of the exponential. Furthermore, we can assume solutions such that the frequency of motion for all masses is the same. A solution of this type can be described by the vector:
+
+$$
+\vec{x}(t) = e^{i \omega t}\begin{bmatrix} 
+a_0 \\ a_1 \\ a_2 \\ \vdots \\ a_N 
+\end{bmatrix} 
+$$
+
+Thus, substituting it into our matrix equation:
+
+$$
+\frac{d^2}{dt^2}e^{i \omega t}\vec{a} = - \frac{k}{m} M e^{i \omega t}\vec{a}
+$$
+
+$$
+- \omega^2 e^{i \omega t}\vec{a} = - \frac{k}{m} M e^{i \omega t}\vec{a}
+$$
+
+Simplifying and renaming the variables:
+
+$$
+\lambda = \omega^2
+$$
+
+Yields:
+
+$$
+\frac{k}{m} M \vec{a} = \lambda \vec{a}
+$$
+
+Therefore, the problem is reduced to finding the eigenvalues and eigenvectors of the matrix.
+## 
+
