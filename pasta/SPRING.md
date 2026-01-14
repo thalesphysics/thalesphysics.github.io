@@ -51,6 +51,7 @@ It is evident that the bottom of the valley is a potential minimum, as gravitati
 $$
 U'(x_o) = 0
 $$
+
 $$
 U''(x_o) > 0
 $$
@@ -72,6 +73,7 @@ In many cases, we are not interested in the complete motion of the objects, but 
 $$
 U''(x_o) = k
 $$
+
 $$
 x - x_o = \Delta x
 $$
