@@ -32,19 +32,21 @@ a:hover {
 
 # The Coupled Mass-Spring System
 
-Um sistema importante na física é o sistema massa-mola. Esse sistema pode ser generalizado para o caso em que todas essas massas e molas estão acopladas entre sí. Nesse tópico, será discutido a importância física, e um modelo teórico para esse sistema. Além disso, as soluções serão obtidas numéricamente utilizando Python em conjunto com Godot.
+A fundamental system in physics is the mass-spring system. This model can be generalized to cases where multiple masses and springs are interconnected. In this section, we will discuss its physical significance and establish a theoretical model. Furthermore, numerical solutions will be obtained using Python in conjunction with the Godot engine.
+
+---
 
 ## Why Masses and Springs?
 
-Uma massa e uma mola grudada em uma parede, por que estudar um sistema tão simples e mundano? A verdade é muito mais profunda do que isso. Qualquer sistema com equilíbrios estáveis pode ser reduzido a um conjunto de massas e molas.
+A mass and a spring attached to a wall—why study a system so simple and mundane? The truth is far more profound. Any system with stable equilibria can be reduced to a set of masses and springs.
 
-Imaginemos, primeiramente, um sistema unidimensional, como por exemplo um vale com uma bola. Se pudessemos supor que a força que age na bola é suficientemente suave, então sua energia potêncial em função de sua posição horizontal pode ser descrita por uma série de taylor:
+Imagine, first, a one-dimensional system, such as a ball in a valley. If we assume the force acting on the ball is sufficiently smooth, its potential energy as a function of horizontal position can be described by a Taylor series:
 
 $$
-U(x) = U(x_o) + U'(x_o)(x-x_o) + \frac{U''(x_o)(x-x_o)^2}{2} + ...
+U(x) = U(x_o) + U'(x_o)(x-x_o) + \frac{U''(x_o)(x-x_o)^2}{2} + \dots
 $$
 
-É evidente que o fundo do vale é um mínimo de potêncial, já que a energia potencial gravitacional é proporcional a altura, e a altura minima é o fundo do vale. Isso indica dois fatos importantes:
+It is evident that the bottom of the valley is a potential minimum, as gravitational potential energy is proportional to height, and the minimum height is at the valley floor. This indicates two important facts:
 
 $$
 U'(x_o) = 0
@@ -53,19 +55,19 @@ $$
 U''(x_o) > 0
 $$
 
-Além disso, é possível tomar como referência o potêncial do fundo do posso, de modo que temos ainda
+Furthermore, we can set the potential at the bottom of the well as our reference point, such that:
 
 $$
 U(x_o) = 0
 $$
 
-Todos esses resultados nos levam a uma simplificação da expansão:
+These results lead to a simplification of the expansion:
 
 $$
-U(x) = \frac{U''(x_o)(x-x_o)^2}{2} + \frac{U'''(x_o)(x-x_o)^3}{6} +...
+U(x) = \frac{U''(x_o)(x-x_o)^2}{2} + \frac{U'''(x_o)(x-x_o)^3}{6} + \dots
 $$
 
-Em muitos casos não estamos tão interessados no movimento completo dos objetos, mas apenas em como esse movimento ocorre ao redor desses pontos de mínimo potêncial. Isso nos leva a uma simplificação drástica se assumirmos que os deslocamentos são pequenos. Definindo
+In many cases, we are not interested in the complete motion of the objects, but only in how that motion occurs around these points of minimum potential. This leads to a drastic simplification if we assume the displacements are small. By defining:
 
 $$
 U''(x_o) = k
@@ -74,8 +76,28 @@ $$
 x - x_o = \Delta x
 $$
 
-Assim
+Thus:
 
 $$
-U(x) = \frac{k\Delta^2}{2} + math{O}(\Delta x^3)
+U(x) = \frac{k\Delta x^2}{2} + \mathcal{O}(\Delta x^3)
 $$
+
+Taking the limit:
+
+$$
+\Delta x \to 0
+$$
+
+The first non-zero term is the quadratic term in $\Delta x$. This reduces all calculations to:
+
+$$
+U(x) = \frac{k\Delta x^2}{2}
+$$
+
+This potential is, in fact, the potential of a spring, such that the force is simply proportional to the displacement:
+
+$$
+F(x) = -\frac{\partial U(x)}{\partial x} = -k \Delta x
+$$
+
+### 
