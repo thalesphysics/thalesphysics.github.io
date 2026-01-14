@@ -127,5 +127,19 @@ $$
 
 Consequently, we have a set of $N$ coupled linear differential equations. This system can be rewritten in matrix form:
 
-
+$$
+m \begin{bmatrix} 
+\ddot{x}_0 \\ \ddot{x}_1 \\ \ddot{x}_2 \\ \vdots \\ \ddot{x}_N 
+\end{bmatrix} = -k 
+\begin{bmatrix} 
+2 & -1 & 0 & \dots & 0 \\
+-1 & 2 & -1 & \dots & 0 \\
+0 & -1 & 2 & \dots & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+0 & 0 & 0 & \dots & 2 
+\end{bmatrix}
+\begin{bmatrix} 
+x_0 \\ x_1 \\ x_2 \\ \vdots \\ x_N 
+\end{bmatrix}
+$$
 
