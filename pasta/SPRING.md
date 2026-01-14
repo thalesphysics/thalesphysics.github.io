@@ -101,5 +101,31 @@ This potential is, in fact, the potential of a spring, such that the force is si
 $$
 F(x) = -\frac{\partial U(x)}{\partial x} = -k \Delta x
 $$
+### More Masses
 
-### 
+In a more comprehensive scenario involving a system of many interacting particles, it is still possible for one or more configurations to exist as local potential minima, which remain stable. In such cases, all forces can be approximated as spring forces. However, the force exerted by these springs depends on the displacement of two distinct particles. This creates a coupling within the system, making the equations of motion significantly more complex. Fortunately, specialized techniques exist to solve this type of system under specific conditions.
+
+#### The Simplest One-Dimensional Coupled Mass-Spring System
+
+To better understand this problem, we begin with the simplest case: a set of identical masses arranged in a line, connected to their immediate neighbors by identical springs. If we denote $x_i$ as the displacement of mass $i$ relative to its equilibrium point, the force acting on each particle is given by:
+
+
+
+$$
+F_i(\vec{x}) = m\ddot x_i = -k (x_i - x_{i+1}) - k (x_i - x_{i-1}) = k(x_{i+1} - 2x_i + x_{i-1})
+$$
+
+The forces acting on the first and last particles depend on the system's boundary conditions. In this instance, we will consider them to be connected to springs anchored to fixed walls. Thus:
+
+$$
+F_0(\vec{x}) = m\ddot x_0 = -k (x_0 - x_{1})
+$$
+
+$$
+F_N(\vec{x}) = m\ddot x_N = -k (x_N - x_{N-1})
+$$
+
+Consequently, we have a set of $N$ coupled linear differential equations. This system can be rewritten in matrix form:
+
+
+
