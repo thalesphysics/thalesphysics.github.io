@@ -180,5 +180,50 @@ $$
 $$
 
 Therefore, the problem is reduced to finding the eigenvalues and eigenvectors of the matrix.
-## 
+
+## Solving with Python
+
+The computational routine developed to solve this system is notably straightforward. It is structured into the following four stages:
+
+* **Variable Initialization**
+* **Matrix Construction**
+* **Solving The Eigensystem**
+* **Data Visualization**
+
+
+```python
+
+import numpy as np                          # Import the libraries
+import matplotlib.pyplot as plt
+
+k = 1                                       # Set the spring constant
+m = 1                                       # Set the mass
+N = 1000                                    # Set the number of masses
+
+M = np.zeros((N,N))                         # Set a null matrice
+
+for i in range(1,N-1):                      # Fill the matrice
+    M[i, i] = -2
+    M[i, i+1] = 1
+    M[i, i-1] = 1
+
+M[0,0] = -2
+M[0,1] = 1
+M[N-1,N-2] = 1
+M[N-1,N-1] = -2
+
+M *= -k/m                                  # Multiply by the constant
+print(M)                                   # Print the matrice
+
+l, v = np.linalg.eig(M)                    # Find the eigenvectors and eigenvalues
+
+idx = np.argsort(l)                        # Sort the eigenvectors and eigenvalues lists
+
+l = l[idx]
+v = v[:, idx]
+
+plt.plot(range(N),v[:,0])                  # Plot the displacements of the first normal mode
+plt.show()
+
+```
 
