@@ -144,7 +144,7 @@ def retorna_um(N,periodic=False,big_mass=False):
 		M[0,N-1] = 1
 		M[N-1,0] = 1
 	if big_mass:
-		M[N//2,N//2] *= 5
+		M[N//2,N//2] /= 5
 
 	M *= -k/m
 	print(M)
