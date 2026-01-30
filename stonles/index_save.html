@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stonles</title>
+
+<style>
+html, body, #canvas {
+	margin: 0;
+	padding: 0;
+	background: black;
+	overflow: hidden;
+}
+#canvas { display: block; }
+</style>
+
+<link rel="icon" href="index.icon.png">
+
+<!-- PYODIDE (CDN, ISOLADO DO GODOT) -->
+<script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<!-- GODOT -->
+<script src="index.js"></script>
+
+<script>
+/* ================= PYODIDE ================= */
+
+let pyodide = null;
+window.last_delta_G = null;
+
+async function init_pyodide() {
+	console.log("Inicializando Pyodide...");
+
+	pyodide = await loadPyodide({
+		indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.1/full/"
+	});
+
+	await pyodide.loadPackage(["numpy", "scikit-learn", "joblib"]);
+
+	const resp = await fetch("krr_adsorcao.joblib", { cache: "no-store" });
+	const buf = await resp.arrayBuffer();
+	pyodide.FS.writeFile("krr_adsorcao.joblib", new Uint8Array(buf));
+
+	await pyodide.runPythonAsync(`
+import numpy as np, joblib
+
+def menor_angulo(v1, v2):
+	v1 = np.asarray(v1,float)
+	v2 = np.asarray(v2,float)
+	return np.arctan2(np.linalg.norm(np.cross(v1,v2)), np.dot(v1,v2))
+
+def atom_defect_features(x,y,defects):
+	rs, ts, al = [],[],[]
+	ref = np.array([1.0,0.0])
+	for d in defects:
+		c = np.array([(d[0]+d[2])/2, (d[1]+d[3])/2])
+		rv = c - np.array([x,y])
+		r = np.linalg.norm(rv)
+		if r==0: continue
+		rs.append(r)
+		ts.append(menor_angulo(ref, rv))
+		al.append(menor_angulo([d[2]-d[0], d[3]-d[1]], rv))
+	if not rs:
+		return np.zeros(12)
+	def s(a): return [np.mean(a), np.min(a), np.max(a), np.std(a)]
+	return np.array(s(rs)+s(ts)+s(al))
+
+art = joblib.load("krr_adsorcao.joblib")
+model, xs, ys = art["model"], art["x_scaler"], art["y_scaler"]
+
+def predict_G(x,y,defects):
+	X = atom_defect_features(x,y,defects).reshape(1,-1)
+	return float(ys.inverse_transform(model.predict(xs.transform(X)).reshape(-1,1))[0,0])
+	`);
+
+	console.log("Pyodide OK");
+}
+
+init_pyodide();
+
+async function call_python_and_return(x,y,defects){
+	if(!pyodide) return;
+	pyodide.globals.set("x",x);
+	pyodide.globals.set("y",y);
+	pyodide.globals.set("d",defects);
+	window.last_delta_G = await pyodide.runPythonAsync("predict_G(x,y,d)");
+}
+</script>
+
+<script>
+/* ================= GODOT ================= */
+const engine = new Engine({
+	executable: "index",
+	canvasResizePolicy: 2,
+	fileSizes: {
+		"index.pck": 107428,
+		"index.wasm": 38057390
+	}
+});
+engine.startGame();
+</script>
+
+</body>
+</html>
