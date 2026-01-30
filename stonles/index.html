@@ -1,231 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
-	<title>Stonles</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stonles</title>
 
-	<style>
+<style>
 html, body, #canvas {
 	margin: 0;
 	padding: 0;
-	border: 0;
-}
-
-body {
-	color: white;
-	background-color: black;
+	background: black;
 	overflow: hidden;
-	touch-action: none;
 }
+#canvas { display: block; }
+</style>
 
-#canvas {
-	display: block;
-}
+<link rel="icon" href="index.icon.png">
 
-#canvas:focus {
-	outline: none;
-}
-
-#status, #status-splash, #status-progress {
-	position: absolute;
-	left: 0;
-	right: 0;
-}
-
-#status, #status-splash {
-	top: 0;
-	bottom: 0;
-}
-
-#status {
-	background-color: #242424;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	visibility: hidden;
-}
-
-#status-splash {
-	max-height: 100%;
-	max-width: 100%;
-	margin: auto;
-}
-
-#status-progress, #status-notice {
-	display: none;
-}
-
-#status-progress {
-	bottom: 10%;
-	width: 50%;
-	margin: 0 auto;
-}
-
-#status-notice {
-	background-color: #5b3943;
-	border-radius: 0.5rem;
-	border: 1px solid #9b3943;
-	color: #e0e0e0;
-	font-family: Arial, sans-serif;
-	line-height: 1.3;
-	margin: 0 2rem;
-	padding: 1rem;
-	text-align: center;
-}
-	</style>
-
-	<link rel="icon" type="image/png" href="index.icon.png">
-	<link rel="apple-touch-icon" href="index.apple-touch-icon.png">
-
-	<!-- Pyodide via CDN (NÃO hospedar localmente) -->
-	<script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+<!-- PYODIDE (CDN, ISOLADO DO GODOT) -->
+<script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
 </head>
 
 <body>
 
-<canvas id="canvas">
-	Your browser does not support the canvas tag.
-</canvas>
+<canvas id="canvas"></canvas>
 
-<noscript>Your browser does not support JavaScript.</noscript>
-
-<div id="status">
-	<img id="status-splash" src="index.png" alt="">
-	<progress id="status-progress"></progress>
-	<div id="status-notice"></div>
-</div>
-
-<!-- Godot loader -->
+<!-- GODOT -->
 <script src="index.js"></script>
 
-<!-- ===================== PYODIDE + ML ===================== -->
 <script>
+/* ================= PYODIDE ================= */
+
 let pyodide = null;
 window.last_delta_G = null;
 
 async function init_pyodide() {
 	console.log("Inicializando Pyodide...");
-	pyodide = await loadPyodide();
+
+	pyodide = await loadPyodide({
+		indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.1/full/"
+	});
 
 	await pyodide.loadPackage(["numpy", "scikit-learn", "joblib"]);
 
-	const response = await fetch(
-		"krr_adsorcao.joblib?v=" + Date.now(),
-		{ cache: "no-store" }
-	);
-
-	if (!response.ok) {
-		throw new Error("Falha ao carregar krr_adsorcao.joblib");
-	}
-
-	const buffer = await response.arrayBuffer();
-	pyodide.FS.writeFile("krr_adsorcao.joblib", new Uint8Array(buffer));
+	const resp = await fetch("krr_adsorcao.joblib", { cache: "no-store" });
+	const buf = await resp.arrayBuffer();
+	pyodide.FS.writeFile("krr_adsorcao.joblib", new Uint8Array(buf));
 
 	await pyodide.runPythonAsync(`
-import numpy as np
-import joblib
+import numpy as np, joblib
 
 def menor_angulo(v1, v2):
-	v1 = np.asarray(v1, float)
-	v2 = np.asarray(v2, float)
-	n1 = np.linalg.norm(v1)
-	n2 = np.linalg.norm(v2)
-	if n1 == 0 or n2 == 0:
-		return 0.0
-	return np.arctan2(np.linalg.norm(np.cross(v1, v2)), np.dot(v1, v2))
+	v1 = np.asarray(v1,float)
+	v2 = np.asarray(v2,float)
+	return np.arctan2(np.linalg.norm(np.cross(v1,v2)), np.dot(v1,v2))
 
-def atom_defect_features(xi, yi, defects):
-	rs, thetas, alphas = [], [], []
-	ref = np.array([1.0, 0.0])
-
+def atom_defect_features(x,y,defects):
+	rs, ts, al = [],[],[]
+	ref = np.array([1.0,0.0])
 	for d in defects:
-		x = 0.5 * (d[0] + d[2])
-		y = 0.5 * (d[1] + d[3])
-		rvec = np.array([x - xi, y - yi])
-		r = np.linalg.norm(rvec)
-		if r == 0:
-			continue
-		dir_def = np.array([d[2] - d[0], d[3] - d[1]])
+		c = np.array([(d[0]+d[2])/2, (d[1]+d[3])/2])
+		rv = c - np.array([x,y])
+		r = np.linalg.norm(rv)
+		if r==0: continue
 		rs.append(r)
-		thetas.append(menor_angulo(ref, rvec))
-		alphas.append(menor_angulo(dir_def, rvec))
-
-	if len(rs) == 0:
+		ts.append(menor_angulo(ref, rv))
+		al.append(menor_angulo([d[2]-d[0], d[3]-d[1]], rv))
+	if not rs:
 		return np.zeros(12)
+	def s(a): return [np.mean(a), np.min(a), np.max(a), np.std(a)]
+	return np.array(s(rs)+s(ts)+s(al))
 
-	def stats(a):
-		return [np.mean(a), np.min(a), np.max(a), np.std(a)]
+art = joblib.load("krr_adsorcao.joblib")
+model, xs, ys = art["model"], art["x_scaler"], art["y_scaler"]
 
-	features = []
-	features += stats(rs)
-	features += stats(thetas)
-	features += stats(alphas)
-
-	return np.array(features, float)
-
-artifact = joblib.load("krr_adsorcao.joblib")
-model = artifact["model"]
-x_scaler = artifact["x_scaler"]
-y_scaler = artifact["y_scaler"]
-
-def predict_G(x, y, defects):
-	X = atom_defect_features(x, y, defects).reshape(1, -1)
-	Xn = x_scaler.transform(X)
-	g = y_scaler.inverse_transform(
-		model.predict(Xn).reshape(-1, 1)
-	)[0, 0]
-	return float(g)
+def predict_G(x,y,defects):
+	X = atom_defect_features(x,y,defects).reshape(1,-1)
+	return float(ys.inverse_transform(model.predict(xs.transform(X)).reshape(-1,1))[0,0])
 	`);
 
-	console.log("Pyodide pronto (KRR)");
+	console.log("Pyodide OK");
 }
 
 init_pyodide();
 
-async function call_python_and_return(x, y, defects) {
-	if (!pyodide) {
-		console.error("Pyodide ainda não carregado");
-		return;
-	}
-
-	pyodide.globals.set("x_js", x);
-	pyodide.globals.set("y_js", y);
-	pyodide.globals.set("defects_js", defects);
-
-	window.last_delta_G = await pyodide.runPythonAsync(
-		"predict_G(x_js, y_js, defects_js)"
-	);
+async function call_python_and_return(x,y,defects){
+	if(!pyodide) return;
+	pyodide.globals.set("x",x);
+	pyodide.globals.set("y",y);
+	pyodide.globals.set("d",defects);
+	window.last_delta_G = await pyodide.runPythonAsync("predict_G(x,y,d)");
 }
 </script>
 
-<!-- ===================== GODOT BOOTSTRAP ===================== -->
 <script>
-const GODOT_CONFIG = {
-	args: [],
-	canvasResizePolicy: 2,
+/* ================= GODOT ================= */
+const engine = new Engine({
 	executable: "index",
+	canvasResizePolicy: 2,
 	fileSizes: {
 		"index.pck": 107428,
 		"index.wasm": 38057390
-	},
-	focusCanvas: true
-};
-
-const engine = new Engine(GODOT_CONFIG);
-
-engine.startGame({
-	onProgress: (current, total) => {
-		const bar = document.getElementById("status-progress");
-		bar.value = current;
-		bar.max = total;
 	}
-}).then(() => {
-	document.getElementById("status").remove();
-}).catch(err => {
-	console.error(err);
 });
+engine.startGame();
 </script>
 
 </body>
