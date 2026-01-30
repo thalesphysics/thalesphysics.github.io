@@ -17,7 +17,6 @@ html, body, #canvas {
 
 <link rel="icon" href="index.icon.png">
 
-<!-- PYODIDE (CDN, ISOLADO DO GODOT) -->
 <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
 </head>
 
@@ -25,17 +24,19 @@ html, body, #canvas {
 
 <canvas id="canvas"></canvas>
 
-<!-- GODOT -->
 <script src="index.js"></script>
 
 <script>
 /* ================= PYODIDE ================= */
 
 let pyodide = null;
-window.last_delta_G = null;
+
+// 🔥 variáveis globais para o Godot
+window.delta_G_mean = null;
+window.delta_G_diff = null;
 
 async function init_pyodide() {
-	console.log("Inicializando Pyodide...");
+	console.log("[JS] Inicializando Pyodide...");
 
 	pyodide = await loadPyodide({
 		indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.1/full/"
@@ -43,53 +44,118 @@ async function init_pyodide() {
 
 	await pyodide.loadPackage(["numpy", "scikit-learn", "joblib"]);
 
-	const resp = await fetch("krr_adsorcao.joblib", { cache: "no-store" });
-	const buf = await resp.arrayBuffer();
-	pyodide.FS.writeFile("krr_adsorcao.joblib", new Uint8Array(buf));
+	const files = [
+		"krr_adsorcao_mean.joblib",
+		"krr_adsorcao_diff.joblib"
+	];
+
+	for (const f of files) {
+		const resp = await fetch(f + "?v=" + Date.now(), { cache: "no-store" });
+		const buf = await resp.arrayBuffer();
+		pyodide.FS.writeFile(f, new Uint8Array(buf));
+		console.log("[JS] Arquivo carregado:", f);
+	}
 
 	await pyodide.runPythonAsync(`
-import numpy as np, joblib
+import numpy as np
+import joblib
 
 def menor_angulo(v1, v2):
-	v1 = np.asarray(v1,float)
-	v2 = np.asarray(v2,float)
-	return np.arctan2(np.linalg.norm(np.cross(v1,v2)), np.dot(v1,v2))
+	v1 = np.asarray(v1, float)
+	v2 = np.asarray(v2, float)
+	n1 = np.linalg.norm(v1)
+	n2 = np.linalg.norm(v2)
+	if n1 == 0 or n2 == 0:
+		return 0.0
+	return np.arctan2(np.linalg.norm(np.cross(v1, v2)), np.dot(v1, v2))
 
-def atom_defect_features(x,y,defects):
-	rs, ts, al = [],[],[]
-	ref = np.array([1.0,0.0])
+def atom_defect_features(xi, yi, defects):
+	rs, ts, al = [], [], []
+	ref = np.array([1.0, 0.0])
+
 	for d in defects:
-		c = np.array([(d[0]+d[2])/2, (d[1]+d[3])/2])
-		rv = c - np.array([x,y])
+		cx = 0.5 * (d[0] + d[2])
+		cy = 0.5 * (d[1] + d[3])
+		rv = np.array([cx - xi, cy - yi])
 		r = np.linalg.norm(rv)
-		if r==0: continue
+		if r == 0:
+			continue
+
+		dir_def = np.array([d[2] - d[0], d[3] - d[1]])
 		rs.append(r)
 		ts.append(menor_angulo(ref, rv))
-		al.append(menor_angulo([d[2]-d[0], d[3]-d[1]], rv))
+		al.append(menor_angulo(dir_def, rv))
+
 	if not rs:
 		return np.zeros(12)
-	def s(a): return [np.mean(a), np.min(a), np.max(a), np.std(a)]
-	return np.array(s(rs)+s(ts)+s(al))
 
-art = joblib.load("krr_adsorcao.joblib")
-model, xs, ys = art["model"], art["x_scaler"], art["y_scaler"]
+	def stats(a):
+		return [np.mean(a), np.min(a), np.max(a), np.std(a)]
 
-def predict_G(x,y,defects):
-	X = atom_defect_features(x,y,defects).reshape(1,-1)
-	return float(ys.inverse_transform(model.predict(xs.transform(X)).reshape(-1,1))[0,0])
+	return np.array(stats(rs) + stats(ts) + stats(al), float)
+
+
+# ===== MODELOS =====
+art_m = joblib.load("krr_adsorcao_mean.joblib")
+art_d = joblib.load("krr_adsorcao_diff.joblib")
+
+model_m = art_m["model"]
+xs_m = art_m["x_scaler"]
+ys_m = art_m["y_scaler"]
+
+model_d = art_d["model"]
+xs_d = art_d["x_scaler"]
+ys_d = art_d["y_scaler"]
+
+
+def predict_G_mean_diff(x, y, defects):
+	f = atom_defect_features(x, y, defects).reshape(1, -1)
+
+	gm_n = model_m.predict(xs_m.transform(f)).reshape(-1, 1)
+	gd_n = model_d.predict(xs_d.transform(f)).reshape(-1, 1)
+
+	gm = float(ys_m.inverse_transform(gm_n)[0, 0])
+	gd = float(ys_d.inverse_transform(gd_n)[0, 0])
+
+	return gm, gd
 	`);
 
-	console.log("Pyodide OK");
+	console.log("[JS] Pyodide pronto");
 }
 
 init_pyodide();
 
-async function call_python_and_return(x,y,defects){
-	if(!pyodide) return;
-	pyodide.globals.set("x",x);
-	pyodide.globals.set("y",y);
-	pyodide.globals.set("d",defects);
-	window.last_delta_G = await pyodide.runPythonAsync("predict_G(x,y,d)");
+
+// ===== FUNÇÃO CHAMADA PELO GODOT =====
+function call_python_and_return(x, y, defects) {
+	if (!pyodide) {
+		console.warn("[JS] Pyodide não pronto");
+		return;
+	}
+
+	console.log("[JS] Chamando Python:", x, y);
+
+	// reseta antes de calcular
+	window.delta_G_mean = null;
+	window.delta_G_diff = null;
+
+	pyodide.runPythonAsync(`
+predict_G_mean_diff(${x}, ${y}, ${JSON.stringify(defects)})
+	`).then((result) => {
+
+		const mean = result[0];
+		const diff = result[1];
+
+		console.log("[JS] mean:", mean, "diff:", diff);
+
+		window.delta_G_mean = mean;
+		window.delta_G_diff = diff;
+
+	}).catch((err) => {
+		console.error("[JS] erro Python:", err);
+		window.delta_G_mean = -999.0;
+		window.delta_G_diff = -999.0;
+	});
 }
 </script>
 
@@ -108,3 +174,4 @@ engine.startGame();
 
 </body>
 </html>
+
