@@ -148,6 +148,7 @@ The simulations were implemented using **Python** and the **Godot Engine**, expl
 - [Dancing Flames](./simulators/dancing_flames.html)  
 - [Projectile with Spring](./simulators/projectile_spring.html)  
 - [Inclined Plane with Ball](./simulators/inclined_plane.html)
+- [Machine Learning](./stonles/index.html)
 
 Each simulation is accompanied by a concise theoretical discussion and its corresponding implementation.
 In some cases, the source code is available for direct access or download.
