@@ -118,148 +118,123 @@ body {
     window.last_delta_G = null;
 
     async function init_pyodide() {
-	    pyodide = await loadPyodide();
-	    await pyodide.loadPackage(["numpy", "scikit-learn", "joblib"]);
 
-    const response = await fetch(
-      "krr_adsorcao.joblib?v=" + Date.now(),
-      { cache: "no-store" }
-    );
-	    const buffer = await response.arrayBuffer();
+        pyodide = await loadPyodide({
+            indexURL: "./"   // 🔴 ISSO é o que faltava no GitHub Pages
+        });
 
-	    pyodide.FS.writeFile(
-		    "krr_adsorcao.joblib",
-		    new Uint8Array(buffer)
-	    );
+        await pyodide.loadPackage(["numpy", "scikit-learn", "joblib"]);
 
-	    await pyodide.runPythonAsync(`
-import numpy as np
-import joblib
+        const response = await fetch(
+            "./krr_adsorcao.joblib?v=" + Date.now(),
+            { cache: "no-store" }
+        );
 
-# ------------------------------------------------------------
-# Ângulo mínimo entre dois vetores (invariante por rotação)
-# ------------------------------------------------------------
-def menor_angulo(v1, v2):
-    v1 = np.asarray(v1, float)
-    v2 = np.asarray(v2, float)
+        const buffer = await response.arrayBuffer();
 
-    norm1 = np.linalg.norm(v1)
-    norm2 = np.linalg.norm(v2)
+        pyodide.FS.writeFile(
+            "krr_adsorcao.joblib",
+            new Uint8Array(buffer)
+        );
 
-    if norm1 == 0 or norm2 == 0:
-        return 0.0
+        await pyodide.runPythonAsync(`
+    import numpy as np
+    import joblib
 
-    cross = np.linalg.norm(np.cross(v1, v2))
-    dot = np.dot(v1, v2)
+    def menor_angulo(v1, v2):
+        v1 = np.asarray(v1, float)
+        v2 = np.asarray(v2, float)
 
-    return np.arctan2(cross, dot)
+        norm1 = np.linalg.norm(v1)
+        norm2 = np.linalg.norm(v2)
 
+        if norm1 == 0 or norm2 == 0:
+            return 0.0
 
-# ------------------------------------------------------------
-# Mesma função de features usada no TREINO (12 features)
-# ------------------------------------------------------------
-def atom_defect_features(xi, yi, defects):
-    rs = []
-    thetas = []
-    alphas = []
+        cross = np.linalg.norm(np.cross(v1, v2))
+        dot = np.dot(v1, v2)
 
-    # Referência fixa → quebra orientação absoluta
-    ref = np.array([1.0, 0.0])
+        return np.arctan2(cross, dot)
 
-    for d in defects:
-        # centro do defeito
-        x = 0.5 * (d[0] + d[2])
-        y = 0.5 * (d[1] + d[3])
+    def atom_defect_features(xi, yi, defects):
+        rs = []
+        thetas = []
+        alphas = []
 
-        rvec = np.array([x - xi, y - yi])
-        r = np.linalg.norm(rvec)
+        ref = np.array([1.0, 0.0])
 
-        if r == 0:
-            continue
+        for d in defects:
+            x = 0.5 * (d[0] + d[2])
+            y = 0.5 * (d[1] + d[3])
 
-        dir_def = np.array([
-            d[2] - d[0],
-            d[3] - d[1]
-        ])
+            rvec = np.array([x - xi, y - yi])
+            r = np.linalg.norm(rvec)
 
-        theta = menor_angulo(ref, rvec)
-        alpha = menor_angulo(dir_def, rvec)
+            if r == 0:
+                continue
 
-        rs.append(r)
-        thetas.append(theta)
-        alphas.append(alpha)
+            dir_def = np.array([d[2] - d[0], d[3] - d[1]])
 
-    if len(rs) == 0:
-        return np.zeros(12)
+            theta = menor_angulo(ref, rvec)
+            alpha = menor_angulo(dir_def, rvec)
 
-    def stats(a):
-        return [
-            np.mean(a),
-            np.min(a),
-            np.max(a),
-            np.std(a)
-        ]
+            rs.append(r)
+            thetas.append(theta)
+            alphas.append(alpha)
 
-    features = []
-    features += stats(rs)
-    features += stats(thetas)
-    features += stats(alphas)
+        if len(rs) == 0:
+            return np.zeros(12)
 
-    return np.array(features, dtype=float)
+        def stats(a):
+            return [np.mean(a), np.min(a), np.max(a), np.std(a)]
 
+        features = []
+        features += stats(rs)
+        features += stats(thetas)
+        features += stats(alphas)
 
-# ------------------------------------------------------------
-# Carrega modelo treinado
-# ------------------------------------------------------------
-artifact = joblib.load("krr_adsorcao.joblib")
+        return np.array(features, dtype=float)
 
-model = artifact["model"]
-x_scaler = artifact["x_scaler"]
-y_scaler = artifact["y_scaler"]
+    artifact = joblib.load("krr_adsorcao.joblib")
 
+    model = artifact["model"]
+    x_scaler = artifact["x_scaler"]
+    y_scaler = artifact["y_scaler"]
 
-# ------------------------------------------------------------
-# Predição de ΔG em um ponto (x, y)
-# ------------------------------------------------------------
-def predict_G(x, y, defects):
-    f = atom_defect_features(x, y, defects)
+    def predict_G(x, y, defects):
+        f = atom_defect_features(x, y, defects)
+        X = f.reshape(1, -1)
+        Xn = x_scaler.transform(X)
+        g_norm = model.predict(Xn).reshape(-1, 1)
+        g = y_scaler.inverse_transform(g_norm).ravel()[0]
+        return float(g)
+        `);
 
-    # garante shape (1, 12)
-    X = f.reshape(1, -1)
-
-    Xn = x_scaler.transform(X)
-
-    g_norm = model.predict(Xn).reshape(-1, 1)
-    g = y_scaler.inverse_transform(g_norm).ravel()[0]
-
-    return float(g)
-
-	    `);
-
-	    console.log("Pyodide pronto (KRR)");
+        console.log("Pyodide pronto (KRR)");
     }
 
     init_pyodide();
 
     async function call_python_and_return(x, y, defects) {
-	    if (!pyodide) {
-		    console.error("Pyodide não pronto");
-		    return;
-	    }
+        if (!pyodide) {
+            console.error("Pyodide não pronto");
+            return;
+        }
 
-	    window.last_delta_G = null;
+        window.last_delta_G = null;
 
-	    pyodide.globals.set("x_js", x);
-	    pyodide.globals.set("y_js", y);
-	    pyodide.globals.set("defects_js", defects);
+        pyodide.globals.set("x_js", x);
+        pyodide.globals.set("y_js", y);
+        pyodide.globals.set("defects_js", defects);
 
-	    const result = await pyodide.runPythonAsync(
-		    "predict_G(x_js, y_js, defects_js)"
-	    );
+        const result = await pyodide.runPythonAsync(
+            "predict_G(x_js, y_js, defects_js)"
+        );
 
-	    window.last_delta_G = result;
+        window.last_delta_G = result;
     }
     </script>
+
 
 
 		
