@@ -226,4 +226,13 @@ plt.plot(range(N),v[:,0])                  # Plot the displacements of the first
 plt.show()
 
 ```
+Running the code, you should obtain the following image:
+
+<div style="display: flex; align-items: flex-start; gap: 40px;">
+  <div>
+    <img src="../pics/AmplitudePerIndex.png" style="width: 1000px; max-width: 200%; border-radius: 8px;" alt="Magnetic waves">
+  </div>
+</div>
+
+This image closely resembles half a period of a sine function. A more thorough analytical investigation would show that the amplitude is indeed a sinusoidal function of the mass index, in direct analogy with the stationary solutions of the wave equation for a vibrating string.
 
