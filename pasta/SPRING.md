@@ -230,9 +230,60 @@ Running the code, you should obtain the following image:
 
 <div style="display: flex; align-items: flex-start; gap: 40px;">
   <div>
-    <img src="../pics/AmplitudePerIndex.png" style="width: 1000px; max-width: 200%; border-radius: 8px;" alt="Magnetic waves">
+    <img src="../pics/AmplitudePerIndex.png" style="width: 1000px; max-width: 200%; border-radius: 8px;" alt="Amplitude per Index">
   </div>
 </div>
 
 This image closely resembles half a period of a sine function. A more thorough analytical investigation would show that the amplitude is indeed a sinusoidal function of the mass index, in direct analogy with the stationary solutions of the wave equation for a vibrating string.
 
+## Making a Visualization with Godot
+
+### The Mass Sprite
+
+To begin creating a visualization in Godot, we first need an image to represent the masses. This can be done either by importing any image from the internet or, more conveniently—as done here—by creating a sprite and assigning it a 2D gradient texture.
+
+<div style="display: flex; align-items: flex-start; gap: 40px;">
+  <div>
+    <img src="../pics/massgodot.png" style="width: 1000px; max-width: 200%; border-radius: 8px;" alt="Mass setup">
+  </div>
+</div>
+
+### The Godot Code
+
+The simplest structure of our code does not involve particularly complex concepts, since it is initially intended solely for visualizing the motion of the masses.
+
+The code performs the following tasks:
+- Defines constant variables such as the amplitude scale, frequency, distance between masses, the number of masses, and the vertical position of the masses;
+- Defines a list to store the mass objects and another list for their corresponding amplitudes;
+- Defines a variable to keep track of time;
+- When the simulation starts, \(N\) masses are created;
+- At each frame, the position of each mass is updated according to its relative amplitude.
+
+```gdscript
+extends Node2D
+
+var N = 3                                                      # Set the number of masses
+
+var masses = []                                                # Set the masses array
+
+var amplitude_factor = 100                                     # Set a factor of amplitude
+var omega = 10                                                 # Set the agular frequency of oscilation
+var distance = 300                                             # Set the distance between masses
+var y0 = 500                                                   # Set the vertical position
+
+var amplitudes = [1,-1,1]                                      # Set the relative amplitudes array
+
+var t = 0                                                      # Set the time variable
+
+func _ready():
+	for i in range(N):                                           # Create N masses and set their vertical position when the simulation starts
+		var mass = load("res://mass.tscn").instantiate()
+		add_child(mass)
+		mass.global_position.y = y0
+		masses.append(mass)
+
+func _physics_process(delta):                                  # Update position of all masses each frame
+	for i in range(N):
+		masses[i].global_position.x = (i+1) * distance + amplitude_factor * amplitudes[i] * sin(omega*t)
+	t += delta
+```
